@@ -1,30 +1,28 @@
 @echo off
 cd /d "%~dp0"
 echo ========================================================
-echo   Starting BULLSIGHT - AI Stock Intelligence Platform
+echo   Starting BULLSIGHT - MERN Stock Intelligence Platform
 echo   Tagline: "See the Bull. Predict the Move."
 echo ========================================================
 echo.
 
-set PYTHON_CMD=python
-if exist "backend\venv\Scripts\python.exe" (
-    set "PYTHON_CMD=%CD%\backend\venv\Scripts\python.exe"
-) else if exist "%USERPROFILE%\.gemini\antigravity\scratch\bullsight\backend\venv\Scripts\python.exe" (
-    set "PYTHON_CMD=%USERPROFILE%\.gemini\antigravity\scratch\bullsight\backend\venv\Scripts\python.exe"
+where mongod >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    if not exist "mongodb_data" mkdir mongodb_data
+    start "BullSight MongoDB (:27017)" /min cmd /c "mongod --dbpath .\mongodb_data --port 27017"
 )
 
-echo [1/2] Starting FastAPI Backend Engine on http://localhost:8000 ...
-start "BullSight Backend (FastAPI)" cmd /k "cd /d "%~dp0backend" && "%PYTHON_CMD%" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+echo [1/2] Starting Express Backend Engine on http://localhost:5000 ...
+start "BullSight Backend (Express :5000)" cmd /k "cd /d "%~dp0server" && npm start"
 
 echo [2/2] Starting React Vite Frontend on http://localhost:3000 ...
-start "BullSight Frontend (Vite)" cmd /k "cd /d "%~dp0frontend" && npm run dev"
+start "BullSight Frontend (Vite :3000)" cmd /k "cd /d "%~dp0frontend" && npm run dev"
 
 echo.
 echo ========================================================
-echo   Bullsight is launching!
+echo   BullSight MERN is launching!
 echo   Frontend: http://localhost:3000
-echo   Backend Docs: http://localhost:8000/docs
+echo   Backend Health: http://localhost:5000/api/health
 echo ========================================================
 timeout /t 3 >nul
 start http://localhost:3000
-

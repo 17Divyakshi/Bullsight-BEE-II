@@ -320,5 +320,90 @@ export const stockAPI = {
         last_updated: '2026-08-20',
       };
     }
+  },
+
+  // Watchlist Persistent MongoDB Endpoints
+  async getWatchlist() {
+    try {
+      const res = await API.get('/user/watchlist');
+      return res.data;
+    } catch (err) {
+      const saved = localStorage.getItem('bullsight_watchlist');
+      return saved ? JSON.parse(saved) : ['AAPL', 'RELIANCE.NS', 'NVDA', 'TCS.NS', 'MSFT'];
+    }
+  },
+
+  async addToWatchlist(symbol) {
+    try {
+      const res = await API.post('/user/watchlist', { symbol });
+      return res.data;
+    } catch (err) {
+      console.warn(`[BullSight API] Offline fallback adding ${symbol}`);
+      return { status: 'fallback', symbol };
+    }
+  },
+
+  async deleteFromWatchlist(symbol) {
+    try {
+      const res = await API.delete(`/user/watchlist/${symbol}`);
+      return res.data;
+    } catch (err) {
+      console.warn(`[BullSight API] Offline fallback deleting ${symbol}`);
+      return { status: 'fallback', symbol };
+    }
+  },
+
+  // Portfolio Persistent MongoDB Endpoints
+  async getPortfolio() {
+    try {
+      const res = await API.get('/user/portfolio');
+      return res.data;
+    } catch (err) {
+      const saved = localStorage.getItem('bullsight_portfolio');
+      return saved ? JSON.parse(saved) : [
+        { symbol: 'AAPL', name: 'Apple Inc.', qty: 15, buyPrice: 180.00 },
+        { symbol: 'RELIANCE.NS', name: 'Reliance Industries Ltd.', qty: 50, buyPrice: 2850.00 },
+        { symbol: 'NVDA', name: 'NVIDIA Corp', qty: 10, buyPrice: 110.00 },
+      ];
+    }
+  },
+
+  async addHolding(holdingData) {
+    try {
+      const res = await API.post('/user/portfolio', holdingData);
+      return res.data;
+    } catch (err) {
+      console.warn(`[BullSight API] Offline fallback adding holding`);
+      return { status: 'fallback', holding: holdingData };
+    }
+  },
+
+  async deleteHolding(identifier) {
+    try {
+      const res = await API.delete(`/user/portfolio/${identifier}`);
+      return res.data;
+    } catch (err) {
+      console.warn(`[BullSight API] Offline fallback deleting holding`);
+      return { status: 'fallback', identifier };
+    }
+  },
+
+  async getPortfolioAnalytics() {
+    try {
+      const res = await API.get('/user/portfolio/analytics');
+      return res.data;
+    } catch (err) {
+      return null;
+    }
+  },
+
+  // BEE-II System Telemetry
+  async getSystemTelemetry() {
+    try {
+      const res = await API.get('/bee2-demo/system-info');
+      return res.data;
+    } catch (err) {
+      return null;
+    }
   }
 };

@@ -33,6 +33,20 @@ export const Portfolio = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
+    async function initPortfolio() {
+      try {
+        const remote = await stockAPI.getPortfolio();
+        if (Array.isArray(remote) && remote.length > 0) {
+          setHoldings(remote);
+        }
+      } catch (e) {
+        // fallback to localStorage
+      }
+    }
+    initPortfolio();
+  }, []);
+
+  useEffect(() => {
     try {
       localStorage.setItem('bullsight_portfolio', JSON.stringify(holdings));
     } catch (e) {}
@@ -56,16 +70,21 @@ export const Portfolio = () => {
     loadPrices();
   }, [holdings]);
 
-  const handleAddHolding = e => {
+  const handleAddHolding = async e => {
     e.preventDefault();
     if (!symbolInput || !qtyInput || !priceInput) return;
 
     const sym = symbolInput.toUpperCase().trim();
+    const qtyNum = parseFloat(qtyInput);
+    const priceNum = parseFloat(priceInput);
+
     const newH = {
       symbol: sym,
       name: `${sym} Position`,
-      qty: parseFloat(qtyInput),
-      buyPrice: parseFloat(priceInput),
+      qty: qtyNum,
+      quantity: qtyNum,
+      buyPrice: priceNum,
+      buy_price: priceNum,
     };
 
     setHoldings([...holdings, newH]);
@@ -73,10 +92,29 @@ export const Portfolio = () => {
     setQtyInput('');
     setPriceInput('');
     setIsModalOpen(false);
+
+    try {
+      await stockAPI.addHolding({
+        symbol: sym,
+        name: `${sym} Position`,
+        quantity: qtyNum,
+        buyPrice: priceNum,
+      });
+    } catch (err) {
+      console.warn('Portfolio sync error:', err);
+    }
   };
 
-  const handleRemove = idx => {
+  const handleRemove = async (idx, holding) => {
     setHoldings(holdings.filter((_, i) => i !== idx));
+    try {
+      const identifier = holding?.id || holding?._id || holding?.symbol;
+      if (identifier) {
+        await stockAPI.deleteHolding(identifier);
+      }
+    } catch (err) {
+      console.warn('Portfolio remove sync error:', err);
+    }
   };
 
   // Calculations with safe normalization
@@ -225,7 +263,7 @@ export const Portfolio = () => {
                           </td>
                           <td className="py-3 px-3 text-right">
                             <button
-                              onClick={() => handleRemove(idx)}
+                              onClick={() => handleRemove(idx, h)}
                               className="p-1 rounded text-muted hover:text-negative transition-colors"
                               title="Delete Holding"
                             >

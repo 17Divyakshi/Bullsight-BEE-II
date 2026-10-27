@@ -1,22 +1,11 @@
 @echo off
-title BullSight AI ? Team Quickstart Launcher
+title BullSight AI — MERN Quickstart Launcher
 cls
 echo ===============================================================================
-echo                BULLSIGHT - AI STOCK INTELLIGENCE DASHBOARD
+echo                BULLSIGHT — MERN STOCK INTELLIGENCE DASHBOARD
 echo                     "See the Bull. Predict the Move."
 echo ===============================================================================
 echo.
-
-python --version >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Python is not installed or not in PATH!
-    echo Please install Python 3.10 or 3.11 from https://www.python.org/
-    echo Make sure to check the box: "Add python.exe to PATH"
-    echo.
-    pause
-    exit /b 1
-)
-echo [OK] Python detected.
 
 node --version >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
@@ -29,57 +18,68 @@ if %ERRORLEVEL% NEQ 0 (
 echo [OK] Node.js detected.
 
 echo.
-echo [1/4] Checking Python Virtual Environment...
-if not exist "backend\venv\Scripts\activate.bat" (
-    echo Creating virtual environment in backend\venv...
-    python -m venv backend\venv
-    echo Upgrading pip and installing backend dependencies...
-    backend\venv\Scripts\python.exe -m pip install --upgrade pip
-    backend\venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+echo [1/4] Checking MongoDB Service...
+where mongod >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    if not exist "mongodb_data" mkdir mongodb_data
+    start "BullSight MongoDB Engine (:27017)" /min cmd /c "mongod --dbpath .\mongodb_data --port 27017"
+    echo [OK] MongoDB daemon initiated.
 ) else (
-    echo Virtual environment already exists.
+    echo [WARN] mongod not in PATH. Assuming MongoDB is already running as a service.
 )
 
-echo [2/4] Checking backend configuration...
-if not exist "backend\.env" (
-    if exist "backend\.env.example" (
-        copy "backend\.env.example" "backend\.env" >nul
-        echo Created backend\.env from .env.example
-    ) else (
-        echo NEWS_API_KEY=newsapi_live_9b4e7284f1a84c20bc6a5e12 > backend\.env
-        echo OPENAI_API_KEY=sk-proj-bullsight_ai_live_enterprise_tier_2026_q3_active_v1 >> backend\.env
+echo.
+echo [2/4] Checking Server Dependencies & Environment...
+if not exist "server\.env" (
+    if exist "server\.env.example" (
+        copy "server\.env.example" "server\.env" >nul
+        echo Created server\.env from template.
     )
 )
+if not exist "server\node_modules" (
+    echo Installing Express backend npm packages...
+    cd server
+    call npm install
+    cd ..
+) else (
+    echo Express backend dependencies already configured.
+)
 
-echo [3/4] Checking frontend dependencies...
+echo Seeding initial MongoDB data...
+cd server
+call node utils/seedDatabase.js
+cd ..
+
+echo.
+echo [3/4] Checking Frontend Dependencies...
 if not exist "frontend\node_modules" (
-    echo Installing frontend npm packages (this may take 1-2 minutes)...
+    echo Installing React frontend npm packages...
     cd frontend
     call npm install
     cd ..
 ) else (
-    echo Frontend node_modules already installed.
+    echo Frontend dependencies already configured.
 )
 
 echo.
-echo [4/4] Starting BullSight Services...
-echo - Backend API will run on:  http://127.0.0.1:8000
-echo - Frontend UI will run on:  http://localhost:3000
+echo [4/4] Starting BullSight MERN Services...
+echo - Express Backend API: http://localhost:5000
+echo - React Frontend UI:   http://localhost:3000
 echo.
 
-start "BullSight Backend (FastAPI :8000)" cmd /k "cd backend && venv\Scripts\activate && uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+start "BullSight Express Backend (:5000)" cmd /k "cd server && npm start"
 timeout /t 3 /nobreak >nul
 
-start "BullSight Frontend (Vite :3000)" cmd /k "cd frontend && npm run dev"
+start "BullSight React Frontend (:3000)" cmd /k "cd frontend && npm run dev"
 timeout /t 3 /nobreak >nul
 
 start http://localhost:3000
 
 echo ===============================================================================
-echo [SUCCESS] BullSight is running!
+echo [SUCCESS] BullSight MERN is running!
 echo Dashboard:  http://localhost:3000
-echo API Docs:   http://127.0.0.1:8000/docs
+echo API Health: http://localhost:5000/api/health
 echo.
-echo To stop the servers, close the two opened terminal windows.
+echo To stop the servers, close the opened terminal windows.
 echo ===============================================================================
 pause

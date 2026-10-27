@@ -24,6 +24,20 @@ export const Watchlist = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
+  useEffect(() => {
+    async function initWatchlist() {
+      try {
+        const remote = await stockAPI.getWatchlist();
+        if (Array.isArray(remote) && remote.length > 0) {
+          setWatchlist(remote);
+        }
+      } catch (e) {
+        // fallback to localStorage
+      }
+    }
+    initWatchlist();
+  }, []);
+
   async function loadWatchlistData() {
     setLoading(true);
     const details = {};
@@ -57,18 +71,28 @@ export const Watchlist = () => {
     }
   }, [watchlist]);
 
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e?.preventDefault();
     const clean = input.trim().toUpperCase();
     if (clean && !watchlist.includes(clean)) {
       setWatchlist([...watchlist, clean]);
       setInput('');
+      try {
+        await stockAPI.addToWatchlist(clean);
+      } catch (err) {
+        console.warn('Watchlist sync error:', err);
+      }
     }
   };
 
-  const handleRemove = (sym, e) => {
+  const handleRemove = async (sym, e) => {
     e.stopPropagation();
     setWatchlist(watchlist.filter(s => s !== sym));
+    try {
+      await stockAPI.deleteFromWatchlist(sym);
+    } catch (err) {
+      console.warn('Watchlist remove sync error:', err);
+    }
   };
 
   return (

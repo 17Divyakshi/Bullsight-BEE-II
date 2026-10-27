@@ -1,0 +1,422 @@
+{
+  "info": {
+    "name": "BullSight MERN Stack API - BEE-II Capstone Collection",
+    "_postman_id": "b7d52a21-9876-4c32-a123-bullsightbee2",
+    "description": "Comprehensive Postman API Collection for BullSight MERN Architecture covering Stock Intelligence, Technical Indicators, LSTM Deep Learning predictions, MongoDB CRUD, Authentication, and BEE-II Core Concept Demonstrations.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. System & Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Service is healthy', function () { var jsonData = pm.response.json(); pm.expect(jsonData.status).to.eql('healthy'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "1. Authentication (JWT & MongoDB)",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"quant_student@university.edu\",\n  \"password\": \"SecurePassword123!\",\n  \"fullName\": \"BEE-II Student\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"trader@bullsight.ai\",\n  \"password\": \"bullsight123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Successful', function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) { pm.collectionVariables.set('authToken', jsonData.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Profile (Protected)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Stocks & Market Data",
+      "item": [
+        {
+          "name": "Get Stock Catalog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stocks/catalog",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "stocks", "catalog"]
+            }
+          }
+        },
+        {
+          "name": "Search Equities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stocks/search?q=Reliance",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "stocks", "search"],
+              "query": [{ "key": "q", "value": "Reliance" }]
+            }
+          }
+        },
+        {
+          "name": "Get Stock Summary (AAPL)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stocks/AAPL",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "stocks", "AAPL"]
+            }
+          }
+        },
+        {
+          "name": "Get Stock History with SMA Overlays (RELIANCE.NS)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stocks/RELIANCE.NS/history?timeframe=3M",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "stocks", "RELIANCE.NS", "history"],
+              "query": [{ "key": "timeframe", "value": "3M" }]
+            }
+          }
+        },
+        {
+          "name": "Get Technical Indicators (RSI, MACD, Bollinger Bands)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stocks/AAPL/indicators",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "stocks", "AAPL", "indicators"]
+            }
+          }
+        },
+        {
+          "name": "Get Market Overview (Indices & Commodities)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/market/overview",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "market", "overview"]
+            }
+          }
+        },
+        {
+          "name": "Stock Screener",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/screener",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "screener"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. AI & Deep Learning Forecasts",
+      "item": [
+        {
+          "name": "Get LSTM Prediction (AAPL, Horizon=7)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/predictions/AAPL?horizon=7",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "predictions", "AAPL"],
+              "query": [{ "key": "horizon", "value": "7" }]
+            }
+          }
+        },
+        {
+          "name": "Get Prediction History from MongoDB",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/predictions/AAPL/history",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "predictions", "AAPL", "history"]
+            }
+          }
+        },
+        {
+          "name": "AI Market Co-Pilot Chat",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"What is the current technical momentum and price outlook for Apple?\",\n  \"context_symbol\": \"AAPL\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ai", "chat"]
+            }
+          }
+        },
+        {
+          "name": "Get Model Evaluation Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/model/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "model", "metrics"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Watchlist (MongoDB CRUD)",
+      "item": [
+        {
+          "name": "Get Watchlist",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/watchlist",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "watchlist"]
+            }
+          }
+        },
+        {
+          "name": "Add to Watchlist (POST)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbol\": \"NVDA\",\n  \"notes\": \"Key AI semiconductor beneficiary\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/watchlist",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "watchlist"]
+            }
+          }
+        },
+        {
+          "name": "Delete from Watchlist (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/watchlist/NVDA",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "watchlist", "NVDA"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Portfolio (MongoDB CRUD & Aggregations)",
+      "item": [
+        {
+          "name": "Get Portfolio Holdings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/portfolio",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "portfolio"]
+            }
+          }
+        },
+        {
+          "name": "Add Holding (POST 201 Created)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbol\": \"MSFT\",\n  \"name\": \"Microsoft Corporation\",\n  \"quantity\": 25.0,\n  \"buyPrice\": 420.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/portfolio",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "portfolio"]
+            }
+          }
+        },
+        {
+          "name": "Portfolio Analytics (Mongoose Aggregation Pipeline)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/portfolio/analytics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "portfolio", "analytics"]
+            }
+          }
+        },
+        {
+          "name": "Delete Holding (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/portfolio/MSFT",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "portfolio", "MSFT"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. BEE-II Core Concept Demonstrations",
+      "item": [
+        {
+          "name": "Node.js OS & Process System Telemetry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bee2-demo/system-info",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bee2-demo", "system-info"]
+            }
+          }
+        },
+        {
+          "name": "EventEmitter Demonstration",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bee2-demo/event-emitter?symbol=AAPL&price=260.50",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bee2-demo", "event-emitter"],
+              "query": [
+                { "key": "symbol", "value": "AAPL" },
+                { "key": "price", "value": "260.50" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Asynchronous Concurrency (Promise.allSettled)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bee2-demo/async-concurrency",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bee2-demo", "async-concurrency"]
+            }
+          }
+        },
+        {
+          "name": "Crypto Module (Hashing & UUID Generation)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bee2-demo/crypto-hash?text=BullsightEnterpriseAPI",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bee2-demo", "crypto-hash"],
+              "query": [{ "key": "text", "value": "BullsightEnterpriseAPI" }]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

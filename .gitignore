@@ -45,6 +45,7 @@ Thumbs.db
 # Database
 *.db
 *.sqlite3
+mongodb_data/
 
 # Logs
 *.log
