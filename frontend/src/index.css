@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* LIGHT THEME TOKENS */
+  --bg-app: #F5F7FB;
+  --bg-sidebar: #FFFFFF;
+  --bg-secondary: #F0F3F9;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #F8FAFC;
+  --bg-hover: #F1F5F9;
+  --primary-emerald: #047857;
+  --bright-emerald: #059669;
+  --secondary-blue: #2563EB;
+  --secondary-violet: #7C3AED;
+  --market-positive: #15803D;
+  --market-negative: #DC2626;
+  --market-warning: #D97706;
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
+  --border-color: #E5E7EB;
+  --border-subtle: #F1F5F9;
+
+  --chart-grid: rgba(229, 231, 235, 0.7);
+  --chart-tooltip-bg: #FFFFFF;
+  --chart-tooltip-text: #111827;
+}
+
+.dark {
+  /* DARK THEME: OBSIDIAN FOREST EMERALD PALETTE (grounded in user reference image) */
+  --bg-app: #060D0B;
+  --bg-sidebar: #081411;
+  --bg-secondary: #0A1813;
+  --bg-card: #0D1D18;
+  --bg-elevated: #122821;
+  --bg-hover: #163229;
+  --primary-emerald: #00D084;
+  --bright-emerald: #05DF96;
+  --secondary-blue: #2DD4BF;
+  --secondary-violet: #818CF8;
+  --market-positive: #00E599;
+  --market-negative: #FF5A5A;
+  --market-warning: #F59E0B;
+  --text-primary: #F0FDF4;
+  --text-secondary: #9EBCB3;
+  --text-muted: #5C7E76;
+  --border-color: #1A3930;
+  --border-subtle: #122822;
+
+  --chart-grid: rgba(26, 57, 48, 0.4);
+  --chart-tooltip-bg: #0D1D18;
+  --chart-tooltip-text: #F0FDF4;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  .dark body {
+    background-image: 
+      radial-gradient(circle 900px at 50% -120px, rgba(0, 208, 132, 0.08), transparent 70%),
+      radial-gradient(circle 650px at 100% 30%, rgba(5, 223, 150, 0.05), transparent 60%),
+      radial-gradient(circle 700px at 0% 70%, rgba(0, 208, 132, 0.04), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* Tabular Numerals for Financial Data Alignment */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Subtle Institutional Financial Grid Texture */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(38, 52, 73, 0.18) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(38, 52, 73, 0.18) 1px, transparent 1px);
+}
+
+:root:not(.dark) .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(229, 231, 235, 0.7) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(229, 231, 235, 0.7) 1px, transparent 1px);
+}
+
+/* Floating Ambient Animations */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes floatDelay {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(6px); }
+}
+
+.animate-float {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: floatDelay 6s ease-in-out infinite 1s;
+}
+
+/* Market Ticker Tape Animation */
+@keyframes tickerTape {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  display: flex;
+  width: max-content;
+  animation: tickerTape 40s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* Bullsight Institutional Card Component */
+.bull-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bull-card:hover {
+  border-color: rgba(0, 208, 132, 0.45);
+  box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.5), 0 0 20px -2px rgba(0, 208, 132, 0.15);
+}
+
+.bull-card-elevated {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  box-shadow: 0 8px 26px -6px rgba(0, 0, 0, 0.4);
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+  background: rgba(13, 29, 24, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(26, 57, 48, 0.8);
+}
+
+:root:not(.dark) .glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(229, 231, 235, 0.8);
+}
+
+/* Glow effects */
+.glow-emerald {
+  box-shadow: 0 0 25px -4px rgba(0, 208, 132, 0.45);
+}
+
+.glow-blue {
+  box-shadow: 0 0 25px -4px rgba(45, 212, 191, 0.45);
+}
+
+/* Respect user accessibility motion settings */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
