@@ -9,28 +9,33 @@
 
 ## 📌 1. Project Overview & Architecture Status
 
-**BullSight** is a full-stack financial intelligence and quantitative equity analytics platform. Originally designed with a Python/FastAPI/SQLAlchemy monolith, the core application has been migrated into an authentic **MERN Stack (MongoDB, Express.js, React 18, Node.js)** aligned with the **Back End Engineering-II (BEE-II)** curriculum.
+**BullSight** is a full-stack financial intelligence and quantitative equity analytics platform. Originally designed as a college capstone with a Python/FastAPI monolith, the core application has been migrated into an authentic **MERN Stack (MongoDB, Express.js, React 18, Node.js)** aligned with the **Back End Engineering-II (BEE-II)** curriculum.
 
 ### Operational State as of October 2026 Audit:
 - **Active Application Stack (MERN):** 
-  - **Frontend:** React 18 + Vite running on port `3000` with Tailwind CSS and dual Plotly/Recharts charting.
-  - **Backend Server:** Node.js v22 + Express v4.21 running on port `5000` handling REST APIs, middleware, controllers, validation, and error handling.
+  - **Frontend:** React 18 + Vite running on port `3000` with Tailwind CSS, Lucide icons, and dual Plotly/Recharts financial charting.
+  - **Backend Server:** Node.js v22 + Express v4.21 running on port `5000` handling REST APIs, modular controllers, request validation, timing logs, and centralized 4-parameter error handling.
   - **Database:** MongoDB v8.2 running on port `27017` via Mongoose v8 managing collections for users, watchlists, portfolios, holdings, and prediction logs.
 - **Auxiliary Python Service (Optional / Inactive):**
-  - The Python/FastAPI service on port `8000` and its TensorFlow LSTM model artifacts (`models/lstm_model.keras`) are preserved intact in `backend/` for hybrid deep learning capability.
-  - During the audit, port `8000` was inactive. The Express backend automatically routes prediction requests through its built-in quantitative time-series forecasting engine (momentum drift, technical consensus, volatility envelopes) and records predictions directly to MongoDB.
+  - The Python/FastAPI service on port `8000` and its TensorFlow LSTM model artifacts ([`backend/models/lstm_model.keras`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/backend/models/lstm_model.keras)) are preserved intact in `backend/` for hybrid deep learning capabilities.
+  - During the audit, port `8000` was inactive. The Express backend automatically routes prediction requests through its internal quantitative time-series forecasting engine (momentum drift, technical consensus, volatility envelopes) and records predictions directly to MongoDB.
 
 ---
 
 ## ✨ 2. Key Features
 
-- **Midnight Emerald Institutional UI/UX:** Dark-mode financial dashboard aesthetic (`#080D1B` background, `#10B981` emerald CTAs, `#38BDF8` blue metrics, `#8B5CF6` AI violet) with a persistent light theme switch (`#F5F7FB`).
-- **Complete Node.js/Express Backend:** Modular REST API architecture with dedicated routers, controllers, input validation middleware, request timing logs, and centralized 4-parameter error handling.
+- **Midnight Emerald Institutional UI/UX:** Dark-mode financial dashboard aesthetic (`#080D1B` background, `#10B981` emerald CTAs, `#38BDF8` blue metrics, `#8B5CF6` AI violet) with a complete, persistent light theme switch (`#F5F7FB`).
+- **Complete Node.js/Express Backend:** Modular REST API architecture with dedicated routers, controllers, input validation middleware, request timing telemetry, and centralized error handling.
 - **MongoDB & Mongoose Persistence:** Document-based storage with compound unique indexes (`{ userId: 1, symbol: 1 }`), schema-level numeric validations, virtual fields, and Mongoose aggregation pipelines.
-- **Global & Indian Equity Telemetry:** Real-time quotes and daily OHLCV candles for Indian equities (`RELIANCE.NS`, `TCS.NS`, `INFY.NS`) and US stocks (`AAPL`, `NVDA`, `MSFT`) ingested natively from Yahoo Finance.
+- **Global & Indian Market Telemetry:** Real-time quotes and daily OHLCV candles for Indian equities (`RELIANCE.NS`, `TCS.NS`, `INFY.NS`) and US stocks (`AAPL`, `NVDA`, `MSFT`) ingested natively from Yahoo Finance.
 - **Pure Mathematical Technical Indicators:** Built-in calculation engine for RSI (14-day Wilder's smoothing), MACD (12, 26, 9), SMA 20/50, EMA 20/50, and Bollinger Bands.
-- **Dual Interactive Charting:** Plotly Pro candlestick views with volume subplots, crosshairs, SMA overlays, and Recharts asset allocation donuts.
-- **Quantitative Screener & Market Overview:** Multi-market screener filtering equities by market, RSI, MACD signal, and forecast outlook.
+- **Dual Interactive Charting (Plotly Pro & Recharts):** High-precision Plotly candlestick and area views with volume subplots, crosshairs, SMA overlays, and Recharts asset allocation donuts.
+- **Watchlist & Portfolio Valuation:** Track positions, marked-to-market live valuation, profit/loss metrics, and Recharts asset allocation donut charts backed by MongoDB persistence.
+- **Quantitative Stock Screener:** Multi-market screener filtering equities by market, RSI momentum, MACD crossover, and forecast signal.
+- **Dedicated Model Performance Analytics View:** Model evaluation interface featuring actual vs. predicted residual error distribution charts and a signal classification matrix (reporting baseline academic target metrics).
+- **News NLP Sentiment Feed:** Financial news feed paired with sentiment classification (Positive, Neutral, Negative) with graceful fallback handling.
+- **BullSight AI Market Co-Pilot:** Conversational assistant grounded in real backend stock data, indicators, and sequence forecasts.
+- **Editorial Typography & Tabular Figures:** Inter for UI typography, Manrope for display headings, and JetBrains Mono with tabular numbers for precision financial data alignment.
 - **BEE-II Lab Demonstrations:** Dedicated educational endpoints demonstrating Node.js `os` and `process` telemetry, `EventEmitter` pub-sub patterns, SHA-256 cryptographic hashing, and asynchronous concurrency via `Promise.allSettled`.
 
 ---
@@ -88,19 +93,19 @@
 
 | BEE-II Syllabus Topic | Concepts Implemented in Project | Project Source File | Verified Status |
 | :--- | :--- | :--- | :--- |
-| **JavaScript ES Modules & Modern Syntax** | `"type": "module"`, `import`/`export`, destructuring, arrow functions, template literals | [`server/server.js`](file:///server/server.js) | **Implemented & Tested** |
-| **Asynchronous JavaScript & Concurrency** | Promises, `async/await`, `Promise.allSettled`, execution duration telemetry | [`server/controllers/bee2DemoController.js`](file:///server/controllers/bee2DemoController.js#L73) | **Implemented & Tested** |
-| **Node.js Core Runtimes & OS** | Built-in `os` and `process` modules (heap usage, uptime, CPU cores) | [`server/controllers/bee2DemoController.js`](file:///server/controllers/bee2DemoController.js#L23) | **Implemented & Tested** |
-| **Node.js Event-Driven Architecture** | `EventEmitter` pub-sub pattern for trading threshold alert triggers | [`server/controllers/bee2DemoController.js`](file:///server/controllers/bee2DemoController.js#L11) | **Implemented & Tested** |
-| **Node.js Cryptography & Security** | `crypto` module (SHA-256 hashing, UUIDv4 generation) | [`server/controllers/bee2DemoController.js`](file:///server/controllers/bee2DemoController.js#L95) | **Implemented & Tested** |
-| **Express Middleware Pipeline** | Custom request logger, response timing, colored status codes | [`server/middleware/requestLogger.js`](file:///server/middleware/requestLogger.js) | **Implemented & Tested** |
-| **Centralized Error Handling** | Global 4-parameter error handler, Mongoose CastError & 11000 duplicate key mapping | [`server/middleware/errorHandler.js`](file:///server/middleware/errorHandler.js) | **Implemented & Tested** |
-| **Request Validation** | Schema property validation, positive numeric boundary checks | [`server/middleware/validator.js`](file:///server/middleware/validator.js) | **Implemented & Tested** |
-| **Authentication & Password Security** | Pre-save bcrypt hashing, JWT issuance (`/api/auth/login`) and verification | [`server/models/User.js`](file:///server/models/User.js), [`server/middleware/authMiddleware.js`](file:///server/middleware/authMiddleware.js) | **Implemented & Tested** (Backend only) |
-| **MongoDB & Mongoose Schemas** | Schema definitions, field constraints, type validations | [`server/models/Holding.js`](file:///server/models/Holding.js), [`server/models/Portfolio.js`](file:///server/models/Portfolio.js) | **Implemented & Tested** |
-| **Database Indexing** | Compound unique indexes preventing duplicate ticker entries per user | [`server/models/Watchlist.js`](file:///server/models/Watchlist.js#L30) | **Implemented & Tested** |
-| **CRUD Operations (RESTful)** | Full `GET`, `POST` (201), `PUT` (200), `DELETE` (200) implementations | [`server/controllers/portfolioController.js`](file:///server/controllers/portfolioController.js) | **Implemented & Tested** |
-| **Aggregation Pipelines** | `$match`, `$group`, `$sum`, `$multiply` calculating cost basis | [`server/controllers/portfolioController.js`](file:///server/controllers/portfolioController.js#L210) | **Implemented & Tested** |
+| **JavaScript ES Modules & Modern Syntax** | `"type": "module"`, `import`/`export`, destructuring, arrow functions, template literals | [`server/server.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/server.js) | **Implemented & Tested** |
+| **Asynchronous JavaScript & Concurrency** | Promises, `async/await`, `Promise.allSettled`, execution duration telemetry | [`server/controllers/bee2DemoController.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/controllers/bee2DemoController.js#L73) | **Implemented & Tested** |
+| **Node.js Core Runtimes & OS** | Built-in `os` and `process` modules (heap usage, uptime, CPU cores) | [`server/controllers/bee2DemoController.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/controllers/bee2DemoController.js#L23) | **Implemented & Tested** |
+| **Node.js Event-Driven Architecture** | `EventEmitter` pub-sub pattern for trading threshold alert triggers | [`server/controllers/bee2DemoController.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/controllers/bee2DemoController.js#L11) | **Implemented & Tested** |
+| **Node.js Cryptography & Security** | `crypto` module (SHA-256 hashing, UUIDv4 generation) | [`server/controllers/bee2DemoController.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/controllers/bee2DemoController.js#L95) | **Implemented & Tested** |
+| **Express Middleware Pipeline** | Custom request logger, response timing, colored status codes | [`server/middleware/requestLogger.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/middleware/requestLogger.js) | **Implemented & Tested** |
+| **Centralized Error Handling** | Global 4-parameter error handler, Mongoose CastError & 11000 duplicate key mapping | [`server/middleware/errorHandler.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/middleware/errorHandler.js) | **Implemented & Tested** |
+| **Request Validation** | Schema property validation, positive numeric boundary checks | [`server/middleware/validator.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/middleware/validator.js) | **Implemented & Tested** |
+| **Authentication & Password Security** | Pre-save bcrypt hashing, JWT issuance (`/api/auth/login`) and verification | [`server/models/User.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/models/User.js), [`server/middleware/authMiddleware.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/middleware/authMiddleware.js) | **Implemented & Tested** (Backend only) |
+| **MongoDB & Mongoose Schemas** | Schema definitions, field constraints, type validations | [`server/models/Holding.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/models/Holding.js), [`server/models/Portfolio.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/models/Portfolio.js) | **Implemented & Tested** |
+| **Database Indexing** | Compound unique indexes preventing duplicate ticker entries per user | [`server/models/Watchlist.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/models/Watchlist.js#L30) | **Implemented & Tested** |
+| **CRUD Operations (RESTful)** | Full `GET`, `POST` (201), `PUT` (200), `DELETE` (200) implementations | [`server/controllers/portfolioController.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/controllers/portfolioController.js) | **Implemented & Tested** |
+| **Aggregation Pipelines** | `$match`, `$group`, `$sum`, `$multiply` calculating cost basis | [`server/controllers/portfolioController.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/controllers/portfolioController.js#L210) | **Implemented & Tested** |
 
 ---
 
@@ -127,7 +132,7 @@ Direct inspection of `bullsight_db` verified that user actions through the React
 - `predictionrecords` — 27 documents (historical forecast logs recorded by prediction queries)
 
 ### C. Postman Collection Status
-- The collection at [`postman/Bullsight_MERN_BEE2_Collection.json`](file:///postman/Bullsight_MERN_BEE2_Collection.json) contains **26 requests** across 7 functional folders.
+- The collection at [`postman/Bullsight_MERN_BEE2_Collection.json`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/postman/Bullsight_MERN_BEE2_Collection.json) contains **26 requests** across 7 functional folders.
 - Automated `pm.test` assertions are present on **2 requests** (`Health Check` and `Login User`). The remaining 24 requests are configured with sample payloads and query parameters for manual or runner execution.
 
 ### D. Deep Learning Prediction & Model Metrics Clarification
@@ -139,7 +144,7 @@ Direct inspection of `bullsight_db` verified that user actions through the React
 ## ⚠️ 7. Known Limitations & Architectural Notes
 
 1. **Client-Side Mock Fallback Behavior:**  
-   In [`frontend/src/services/api.js`](file:///frontend/src/services/api.js), API functions use `try...catch` blocks that fall back to mock data if the backend is unreachable. While this improves client resilience, it can mask backend connectivity issues during testing. Check browser DevTools (Network tab) to confirm requests return HTTP 200 from Express.
+   In [`frontend/src/services/api.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/frontend/src/services/api.js), API functions use `try...catch` blocks that fall back to mock data if the backend is unreachable. While this improves client resilience, it can mask backend connectivity issues during testing. Check browser DevTools (Network tab) to confirm requests return HTTP 200 from Express.
 2. **Guest Mode Operation:**  
    While JWT authentication is fully implemented and tested in the backend (`POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`), the React frontend currently operates in **guest mode** (`userId: null`) without a dedicated login/register UI.
 3. **Absence of Dedicated Frontend Unit Tests:**  
@@ -176,6 +181,11 @@ cd server
 npm install
 
 # Copy environment template if not present (placeholders only)
+# Windows (PowerShell):
+Copy-Item .env.example .env
+# Windows (CMD):
+copy .env.example .env
+# macOS / Linux:
 cp .env.example .env
 
 # Seed initial database records (demo portfolio & watchlist defaults)
@@ -207,7 +217,7 @@ Open **`http://localhost:3000`** in your browser. All requests to `/api/*` will 
 cd backend
 python -m venv venv
 
-# Windows:
+# Windows (PowerShell):
 .\venv\Scripts\Activate.ps1
 # macOS / Linux:
 source venv/bin/activate
@@ -262,26 +272,26 @@ When active on port 8000, Express will detect the service and route prediction r
 
 ## 🗄️ 10. Database Schema Documentation (MongoDB & Mongoose)
 
-1. **`users` Collection ([`server/models/User.js`](file:///server/models/User.js)):**
+1. **`users` Collection ([`server/models/User.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/models/User.js)):**
    - `email`: String (required, unique index, lowercase, trimmed, regex format validation)
    - `passwordHash`: String (required, hashed via bcrypt salt rounds: 10)
    - `fullName`: String (trimmed)
    - `role`: String (enum: `['user', 'admin', 'analyst']`, default: `'user'`)
    - Pre-save hook: Hashes password if modified; includes `matchPassword` comparison method.
 
-2. **`watchlists` Collection ([`server/models/Watchlist.js`](file:///server/models/Watchlist.js)):**
+2. **`watchlists` Collection ([`server/models/Watchlist.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/models/Watchlist.js)):**
    - `userId`: ObjectId (ref: `'User'`, indexed)
    - `symbol`: String (required, uppercase, indexed)
    - `notes`: String
    - **Index:** Compound unique index `{ userId: 1, symbol: 1 }` preventing duplicate tickers.
 
-3. **`portfolios` Collection ([`server/models/Portfolio.js`](file:///server/models/Portfolio.js)):**
+3. **`portfolios` Collection ([`server/models/Portfolio.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/models/Portfolio.js)):**
    - `userId`: ObjectId (ref: `'User'`, indexed)
    - `name`: String (default: `'Main Trading Portfolio'`)
    - `description`: String
    - **Virtual:** `holdings` (references `'Holding'` via `localField: '_id', foreignField: 'portfolioId'`)
 
-4. **`holdings` Collection ([`server/models/Holding.js`](file:///server/models/Holding.js)):**
+4. **`holdings` Collection ([`server/models/Holding.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/models/Holding.js)):**
    - `portfolioId`: ObjectId (ref: `'Portfolio'`, required, indexed)
    - `symbol`: String (required, uppercase, indexed)
    - `name`: String
@@ -290,7 +300,7 @@ When active on port 8000, Express will detect the service and route prediction r
    - `buyDate`: Date (default: `Date.now`)
    - **Virtual:** `totalCost` (computed as `quantity * buyPrice`)
 
-5. **`predictionrecords` Collection ([`server/models/PredictionRecord.js`](file:///server/models/PredictionRecord.js)):**
+5. **`predictionrecords` Collection ([`server/models/PredictionRecord.js`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/server/models/PredictionRecord.js)):**
    - `symbol`: String (required, uppercase, indexed)
    - `currentPrice`: Number (required)
    - `predictedPrice`: Number (required)
@@ -307,8 +317,8 @@ When active on port 8000, Express will detect the service and route prediction r
 
 ## 🧪 11. Testing & Viva Resources
 
-- **Postman Collection:** [`postman/Bullsight_MERN_BEE2_Collection.json`](file:///postman/Bullsight_MERN_BEE2_Collection.json) contains pre-configured requests across all domains with environment variable support (`baseUrl = http://localhost:5000`).
-- **Comprehensive Viva Guide:** For detailed questions and model answers covering architectural design decisions, MongoDB vs SQL, Express middleware pipelines, JWT security, and concurrency models, refer to **[`BEE2_VIVA_PREPARATION.md`](file:///BEE2_VIVA_PREPARATION.md)**.
+- **Postman Collection:** [`postman/Bullsight_MERN_BEE2_Collection.json`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/postman/Bullsight_MERN_BEE2_Collection.json) contains pre-configured requests across all domains with environment variable support (`baseUrl = http://localhost:5000`).
+- **Comprehensive Viva Guide:** For detailed questions and model answers covering architectural design decisions, MongoDB vs SQL, Express middleware pipelines, JWT security, and concurrency models, refer to **[`BEE2_VIVA_PREPARATION.md`](file:///c:/Users/hp%20laptop/OneDrive/Desktop/Bullsight-main/BEE2_VIVA_PREPARATION.md)**.
 
 ---
 
